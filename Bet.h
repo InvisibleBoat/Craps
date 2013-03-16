@@ -3,9 +3,15 @@
 
 class Bet {
     
-    
-    int money;
-	int location;
+    private:
+		int money;
+		int location;
+	
+	public:
+		Bet(int newOwner, int newMoney, int newLocation);
+		int getOwner();
+		int getMoney();
+		int getLocation();
 	
 	
 };
