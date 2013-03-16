@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <time.h>
+#include <cstring>
 
 #include "Player.h"
 #include "Bet.h"
@@ -19,7 +20,7 @@ class Dealer {
         vector<Bet*>     bets;
         pair<int, int>  dice;
         bool            running;
-		int on = 0;
+		int on;
     
     public:
         Dealer();

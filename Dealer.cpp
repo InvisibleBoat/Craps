@@ -7,6 +7,7 @@ Dealer::Dealer() {
     dice.first = dice.second = 1;
     running = true;
     srand((int)time(NULL));
+    on = 0;
 }
 
 void Dealer::run() {
