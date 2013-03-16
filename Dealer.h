@@ -5,6 +5,7 @@
 #include <vector>
 #include <cstdlib>
 #include <iostream>
+#include <time.h>
 
 #include "Player.h"
 #include "Bet.h"
