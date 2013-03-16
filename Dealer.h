@@ -4,6 +4,8 @@
 
 #include <vector>
 #include <cstdlib>
+#include <iostream>
+
 #include "Player.h"
 #include "Bet.h"
 
@@ -15,8 +17,10 @@ class Dealer {
         vector<Player>  players;
         vector<Bet>     bets;
         pair<int, int>  dice;
+        bool            running;
     
     public:
+        Dealer();
         void run();
         void roll();
         void evaluateBets();
