@@ -19,6 +19,7 @@ class Dealer {
         vector<Bet*>     bets;
         pair<int, int>  dice;
         bool            running;
+		int on = 0;
     
     public:
         Dealer();
