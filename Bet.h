@@ -3,6 +3,7 @@
 
 class Bet{
 
+	int location;
 };
 
 #endif
