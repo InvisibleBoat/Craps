@@ -1,7 +1,9 @@
 #ifdef BET_H
 #define BET_H
 
-class Bet{
+class Bet {
+    
+    int money;
 
 	int location;
 };
