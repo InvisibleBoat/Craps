@@ -18,10 +18,13 @@ void Dealer::run() {
 }
 
 void Dealer::roll() {
-    dice.first = rand() % 6 + 1;
-    dice.second = rand() % 6 + 1;
-	
-    cout << "Roll:\t" << dice.first << "\t" << dice.second << endl;
+    
+    if(running) {
+        dice.first = rand() % 6 + 1;
+        dice.second = rand() % 6 + 1;
+    
+        cout << "Roll:\t" << dice.first << "\t" << dice.second << endl;
+    }
 }
 
 void Dealer::evaluateBets() {
@@ -59,13 +62,43 @@ void Dealer::evaluateBets() {
 
 void Dealer::handleInput() {
     
-    string s = "";
+    char s[100];
+    char *cmd;
+    char *prm;
     
-    while(s != "roll") {
-        getline(cin, s);
+    while(strcmp(s, "roll") && running) {
+        cin.getline(s, 100);
+        cmd = strtok(s, " ");
         
-        if(s == "quit") {
+        if(!strcmp(cmd,"quit")) {
+            running = false;
+        }
+        else if(!strcmp(cmd,"bet")) {
             
+            prm = strtok(NULL, " ");
+            int pIdx = (strcmp(prm, "")) ? atoi(prm) : -1;
+            
+            prm = strtok(NULL, " ");
+            int value = (strcmp(prm, "")) ? atoi(prm) : -1;
+            
+            int loc = -1;
+            prm = strtok(NULL, " ");
+            if(!strcmp(prm, "pass")) {
+                loc = 1;                                            // ADJUST THIS
+            }
+            else if(!strcmp(prm, "come")) {
+                loc = 2;                                            // ADJUST THIS
+            }
+            
+            if(pIdx >= 0 && value > 0 && loc > 0) {
+                bets.push_back(new Bet(pIdx, value, loc));
+            }
+        }
+        else if(!strcmp(cmd,"board")) {
+            for(int i = 0; i < bets.size(); i++) {
+                cout << bets[i]->getOwner() << "\t" << bets[i]->getMoney()
+                     << "\t" << bets[i]->getLocation() << endl;
+            }
         }
     }
 }
