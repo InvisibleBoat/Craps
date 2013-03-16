@@ -13,7 +13,6 @@ class Bet {
 		int getMoney();
 		int getLocation();
 	
-	
 };
 
 #endif

@@ -1,7 +1,16 @@
 #include "Player.h"
 
-int makeBet(int bet, int location){
+Player::Player(string newName, int newBalance){
 
+	name = newName;
+	balance = newBalance;
 	
 }
 
+string Player::getName(){
+	return name;
+}
+
+int  Player::getBalance(){
+	return balance;
+}

@@ -7,10 +7,15 @@ using namespace std;
 
 class Player {
     
-	string name;
-	int balance;
+	private:
+		string name;
+		int balance;
+		
+	public:
+		Player(string newName, int newBalance);
+		string getName();
+		int getBalance();
 	
-	int makeBet(int bet, int location);
 	
 };
 
