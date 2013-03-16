@@ -2,7 +2,8 @@
 #include "Dealer.h"
 
 Dealer::Dealer() {
-    players.push_back(new Player);
+    players.push_back(new Player("Tyler", 1000));
+    players.push_back(new Player("Robert", 1000));
     dice.first = dice.second = 1;
     running = true;
     srand((int)time(NULL));
@@ -29,40 +30,43 @@ void Dealer::roll() {
 
 void Dealer::evaluateBets() {
     
+    int sum = dice.first + dice.second;
+    
     for(int i = 0; i < bets.size(); i++) {
         // TODO: Evaluate each bet
-		b = bets[i];
-		sum = dice.frist + dice.second;
+		Bet b = *bets[i];
 		
-		if(on == 0){
+		if(!on){
 			//Easy Win on Pass
-			if(b.getLocation()==0 and sum == 7 or sum == 11 ){
-				players[b.getOwner()].addMoney(b.getMoney());
-				bets.remove(i);
+			if(b.getLocation() == 0 and (sum == 7 or sum == 11)){
+				players[b.getOwner()]->addMoney(2 * b.getMoney());
+				bets.erase(bets.begin() + i);
 				i--;
 			}
-			//Set on to 4,5,6,8,9, or 10
-			else if(b.getLocation()==0 and sum != 2 and sum!= 3 and sum != 12)
-				on = dice.frist + dice.second;
 			//Craps out pass
-			else{
-				bets.remove(i);
+			else if(!(b.getLocation()==0 and sum != 2 and sum!= 3 and sum != 12)){
+				bets.erase(bets.begin() + i);
 				i--;
-			}
+            }
 		}
 		else{
 			//Craps seven
-			if(b.getLocation()==0 and sum == 7){
-				on = 0;
-				bets.clear();
+			if(b.getLocation() == 0 and sum == 7){
+				bets.erase(bets.begin() + i);
+				i--;
 			}
 			else if(b.getLocation()==0 and sum == on){
-				players[b.getOwner()].addMoney(b.getMoney());
-				bets.remove(i);
+				players[b.getOwner()]->addMoney(2 * b.getMoney());
+				bets.erase(bets.begin() + i);
 				i--;
 			}
 		}
     }
+    
+    if(!on and sum != 2 and sum!= 3 and sum != 12)
+        on = dice.first + dice.second;
+    else if(on && (sum == 7 or sum == on))
+        on = 0;
 }
 
 void Dealer::handleInput() {
@@ -80,23 +84,31 @@ void Dealer::handleInput() {
         }
         else if(!strcmp(cmd,"bet")) {
             
+            // read player index
             prm = strtok(NULL, " ");
             int pIdx = (strcmp(prm, "")) ? atoi(prm) : -1;
             
+            // read bet value
             prm = strtok(NULL, " ");
             int value = (strcmp(prm, "")) ? atoi(prm) : -1;
             
+            // read bet location
             int loc = -1;
             prm = strtok(NULL, " ");
-            if(!strcmp(prm, "pass")) {
-                loc = 1;                                            // ADJUST THIS
+            if(!strcmp(prm, "pass") && !on) {
+                loc = 0;
             }
             else if(!strcmp(prm, "come")) {
-                loc = 2;                                            // ADJUST THIS
+                loc = 1;
             }
             
-            if(pIdx >= 0 && value > 0 && loc > 0) {
+            // create bet if valid
+            if(pIdx >= 0  && pIdx < players.size() && value > 0 && value <= players[pIdx]->getBalance() && loc >= 0) {
                 bets.push_back(new Bet(pIdx, value, loc));
+                players[pIdx]->addMoney(-value);
+            }
+            else {
+                cout << "Invalid bet." << endl;
             }
         }
         else if(!strcmp(cmd,"board")) {
@@ -105,5 +117,11 @@ void Dealer::handleInput() {
                      << "\t" << bets[i]->getLocation() << endl;
             }
         }
+        else if(!strcmp(cmd,"players")) {
+            for(int i = 0; i < players.size(); i++) {
+                cout << players[i]->getName() << "\t" << players[i]->getBalance() << endl;
+            }
+        }
+        
     }
 }

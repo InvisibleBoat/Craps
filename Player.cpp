@@ -22,5 +22,5 @@ int  Player::getBalance(){
 	return balance;
 }
 void Player::addMoney(int bet){
-	money = money + bet;
+	balance = balance + bet;
 }
