@@ -11,6 +11,7 @@ class Player {
 		int balance;
 		
 	public:
+        Player();
 		Player(string newName, int newBalance);
 		string getName();
 		int getBalance();

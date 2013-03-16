@@ -5,7 +5,7 @@ Dealer::Dealer() {
     players.push_back(new Player);
     dice.first = dice.second = 1;
     running = true;
-    srand(clock());
+    srand((int)time(NULL));
 }
 
 void Dealer::run() {
@@ -36,8 +36,10 @@ void Dealer::handleInput() {
     string s = "";
     
     while(s != "roll") {
-        s = cin.getline();
+        getline(cin, s);
         
-        
+        if(s == "quit") {
+            
+        }
     }
 }

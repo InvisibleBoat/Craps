@@ -14,8 +14,8 @@ using namespace std;
 class Dealer {
     
     private:
-        vector<Player>  players;
-        vector<Bet>     bets;
+        vector<Player*>  players;
+        vector<Bet*>     bets;
         pair<int, int>  dice;
         bool            running;
     

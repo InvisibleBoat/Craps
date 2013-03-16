@@ -1,4 +1,11 @@
-#include Bet_H
+#include "Bet.h"
+
+Bet::Bet() {
+    
+	owner = 0;
+	money = 0;
+	location = 0;
+}
 
 Bet::Bet(int newOwner, int newMoney, int newLocation){
 
