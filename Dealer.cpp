@@ -22,10 +22,15 @@ void Dealer::run() {
 void Dealer::roll() {
     
     if(running) {
-        dice.first = rand() % 6 + 1;
-        dice.second = rand() % 6 + 1;
-    
-        cout << "Roll:\t" << dice.first << "\t" << dice.second << endl;
+        if(bets.size()) {
+            dice.first = rand() % 6 + 1;
+            dice.second = rand() % 6 + 1;
+        
+            cout << "Roll:\t" << dice.first << "\t" << dice.second << endl;
+        }
+        else {
+            cout << "At least one bet must be placed to roll." << endl;
+        }
     }
 }
 
@@ -74,55 +79,98 @@ void Dealer::handleInput() {
     
     char s[100];
     char *cmd;
-    char *prm;
     
     while(strcmp(s, "roll") && running) {
         cin.getline(s, 100);
         cmd = strtok(s, " ");
         
         if(!strcmp(cmd,"quit")) {
-            running = false;
+            quit();
         }
         else if(!strcmp(cmd,"bet")) {
-            
-            // read player index
-            prm = strtok(NULL, " ");
-            int pIdx = (strcmp(prm, "")) ? atoi(prm) : -1;
-            
-            // read bet value
-            prm = strtok(NULL, " ");
-            int value = (strcmp(prm, "")) ? atoi(prm) : -1;
-            
-            // read bet location
-            int loc = -1;
-            prm = strtok(NULL, " ");
-            if(!strcmp(prm, "pass") && !on) {
-                loc = 0;
-            }
-            else if(!strcmp(prm, "come")) {
-                loc = 1;
-            }
-            
-            // create bet if valid
-            if(pIdx >= 0  && pIdx < players.size() && value > 0 && value <= players[pIdx]->getBalance() && loc >= 0) {
-                bets.push_back(new Bet(pIdx, value, loc));
-                players[pIdx]->addMoney(-value);
-            }
-            else {
-                cout << "Invalid bet." << endl;
-            }
+            addBet(strtok(NULL, ""));
         }
         else if(!strcmp(cmd,"board")) {
-            for(int i = 0; i < bets.size(); i++) {
-                cout << bets[i]->getOwner() << "\t" << bets[i]->getMoney()
-                     << "\t" << bets[i]->getLocation() << endl;
-            }
+            viewBoard();
         }
         else if(!strcmp(cmd,"players")) {
-            for(int i = 0; i < players.size(); i++) {
-                cout << players[i]->getName() << "\t" << players[i]->getBalance() << endl;
-            }
+            viewPlayers();
         }
-        
+        else if(!strcmp(cmd,"addPlayer")) {
+            addPlayer(strtok(NULL, ""));
+        }
     }
 }
+
+void Dealer::quit() {
+    running = false;
+}
+
+void Dealer::addBet(char *c) {
+    
+    // read player index
+    char *prm = strtok(c, " ");
+    int pIdx = (strcmp(prm, "")) ? atoi(prm) : -1;
+    
+    // read bet value
+    prm = strtok(NULL, " ");
+    int value = (strcmp(prm, "")) ? atoi(prm) : -1;
+    
+    // read bet location
+    int loc = LOC_INVALID;
+    prm = strtok(NULL, " ");
+    if(!strcmp(prm, "pass") && !on) {
+        loc = LOC_PASS;
+    }
+    else if(!strcmp(prm, "come")) {
+        loc = LOC_COME;
+    }
+    
+    // create bet if valid
+    if(!isValidPlayer(pIdx)) {
+        cout << "Invalid bet: Player does not exist" << endl;
+    }
+    else if(!(players[pIdx]->hasFunds(value))) {
+        cout << "Invalid bet: Insufficient Funds" << endl;
+    }
+    else if(loc == LOC_INVALID) {
+        cout << "Invalid bet: Invalid board location" << endl;
+    }
+    else {
+        bets.push_back(new Bet(pIdx, value, loc));
+        players[pIdx]->addMoney(-value);
+    }
+}
+
+void Dealer::viewBoard() {
+    
+    cout << "ON:\t" << on << endl;
+    
+    for(int i = 0; i < bets.size(); i++) {
+        cout << bets[i]->toString() << endl;
+    }
+}
+
+void Dealer::viewPlayers() {
+    for(int i = 0; i < players.size(); i++) {
+        cout << players[i]->toString() << endl;
+    }
+}
+
+void Dealer::addPlayer(char *c) {
+    // read player index
+    char* prm = strtok(c, " ");
+    char* name = prm;
+    
+    // read bet value
+    prm = strtok(NULL, " ");
+    int bal = (prm) ? atoi(prm) : 0;
+    
+    if(name && bal > 0)
+        players.push_back(new Player(name, bal));
+}
+
+bool Dealer::isValidPlayer(int i) {
+    return (i >= 0  && i < players.size());
+}
+

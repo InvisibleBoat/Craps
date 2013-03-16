@@ -1,6 +1,11 @@
 #ifndef BET_H
 #define BET_H
 
+#include <string>
+#include <sstream>
+
+using namespace std;
+
 class Bet {
     
     private:
@@ -14,6 +19,7 @@ class Bet {
 		int getOwner();
 		int getMoney();
 		int getLocation();
+        string toString();
 	
 };
 
