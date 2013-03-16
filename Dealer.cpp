@@ -32,29 +32,34 @@ void Dealer::evaluateBets() {
     for(int i = 0; i < bets.size(); i++) {
         // TODO: Evaluate each bet
 		b = bets[i];
+		sum = dice.frist + dice.second;
 		
 		if(on == 0){
 			//Easy Win on Pass
-			if(b.getLocation()==0 and (dice.frist + dice.second) == 7 or (dice.frist + dice.second) == 11 ){
+			if(b.getLocation()==0 and sum == 7 or sum == 11 ){
 				players[b.getOwner()].addMoney(b.getMoney());
 				bets.remove(i);
 				i--;
 			}
 			//Set on to 4,5,6,8,9, or 10
-			else if(b.getLocation()==0 and ((dice.frist + dice.second) != 2) and ((dice.frist + dice.second) != 3) and ((dice.frist + dice.second) != 12)
+			else if(b.getLocation()==0 and sum != 2 and sum!= 3 and sum != 12)
 				on = dice.frist + dice.second;
 			//Craps out pass
 			else{
 				bets.remove(i);
 				i--;
 			}
-				
 		}
 		else{
-			
-			if(b.getLocation()==0 and (dice.frist + dice.second) == 7){
-			
-			
+			//Craps seven
+			if(b.getLocation()==0 and sum == 7){
+				on = 0;
+				bets.clear();
+			}
+			else if(b.getLocation()==0 and sum == on){
+				players[b.getOwner()].addMoney(b.getMoney());
+				bets.remove(i);
+				i--;
 			}
 		}
     }

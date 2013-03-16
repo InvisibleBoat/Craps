@@ -15,6 +15,7 @@ class Player {
 		Player(string newName, int newBalance);
 		string getName();
 		int getBalance();
+		void addMoney(int bet);
 	
 	
 };
